@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import {Button, FormGroup, FormControl, ControlLabel, Radio, Checkbox, ButtonGroup, Grid, Col} from 'react-bootstrap';
 
 class EmployeeForm extends Component{
 
@@ -18,8 +19,11 @@ class EmployeeForm extends Component{
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.resetStateAndForm = this.resetStateAndForm.bind(this);
         this.navigateToList = this.navigateToList.bind(this);
-        if(this.props.match.params.hasOwnProperty('id')){
+        if(this.props.match && this.props.match.params.hasOwnProperty('id')){
             this.id = this.props.match.params.id;
+            console.log("In update of employee " + this.id);
+        }else if(!this.props.match && this.props.employee){
+            this.id = this.props.employee.id;
             console.log("In update of employee " + this.id);
         }else{
             console.log("Adding new employee");
@@ -29,7 +33,7 @@ class EmployeeForm extends Component{
 
     componentDidMount(){
         console.log("EmployeeForm component mounted");
-        console.log(this.id);
+        // console.log(this.id);
         
         // After component renders successfully, store all checkboxes
         this.checkboxes = document.querySelectorAll('[type="checkbox"]');
@@ -63,7 +67,9 @@ class EmployeeForm extends Component{
             
         }else if(!this.props.employee && this.id){
             alert("In update, no employee details are received");
-            this.props.history.push('/');
+            if(this.props.history){
+                this.props.history.push('/');
+            }
         }
     }
 
@@ -130,56 +136,108 @@ class EmployeeForm extends Component{
 
     navigateToList(){
         this.resetStateAndForm();
-        this.props.history.push("/");
+        if(this.props.history){
+            this.props.history.push("/");
+        }else if(this.props.closeModal){
+            this.props.closeModal();
+        }
     }
 
     render(){
         return (
-            <form name="EmployeeForm" onSubmit={this.handleFormSubmit}>
-                <b>First Name : * </b> <input type="text" name="firstname" placeholder="firstname" 
-                onChange={this.handleOnChange} value={this.state.firstname} required/>
-                <br/>
-                <br/>
-                <b>Last Name : * </b> <input type="text" name="lastname" placeholder="lastname" onChange={this.handleOnChange} value={this.state.lastname} required/>
-                <br/>
-                <br/>
-                <b>Email ID : * </b> <input type="email" name="email" placeholder="email id" onChange={this.handleOnChange} value={this.state.email} required/>
-                <br/>
-                <br/>
-                <b>Gender : * </b> <input type="radio" name="gender" value="male" onClick={this.handleOnChange} required/> Male
-                {/* mention required on any of the radio with the same name, but same for the checkbox won't work */}
-                <input type="radio" name="gender" value="female" onChange={this.handleOnChange}/> Female
-                <br/>
-                <br/>
-                <b>Team : </b> 
-                <select name="team" onChange={this.handleOnChange} value={this.state.team}>
-                    <option value="">Select your team</option>
-                    <option value="IMS">IMS Team</option>
-                    <option value="CMMS">CMMS Team</option>
-                    <option value="Android">Android Team</option>
-                    <option value="IOS">IOS Team</option>
-                    <option value="QA">QA Team</option>
-                </select>
-                <br/>
-                <br/>
-                <b>Favourite Sports :</b> 
-                <input type="checkbox" name="sport" value="cricket" onClick={this.handleOnChangeCheckbox}/> Cricket
-                <input type="checkbox" name="sport" value="football" onClick={this.handleOnChangeCheckbox}/> Football
-                <input type="checkbox" name="sport" value="chess" onClick={this.handleOnChangeCheckbox}/> Chess
-                <input type="checkbox" name="sport" value="carrom" onClick={this.handleOnChangeCheckbox}/> Carrom
-                <br/>
-                <br/>
-                <input type="submit"/>
-                <input type="button" value="Reset" onClick={this.resetStateAndForm}/>
-                <br/>
-                <br/>
-                {/* <Link to="/">Go Back</Link> */}
-                <hr/>
-                <button onClick={this.navigateToList}>
-                    &lt;= Go Back
-                </button>
-                <hr/>
-            </form>
+            <Grid>
+                <Col lg={this.id?12:6} style={this.id?{}:{margin : '0 auto', textAlign:'left'}}>
+                <form name="EmployeeForm" onSubmit={this.handleFormSubmit}>
+                        <FormGroup>
+                            <ControlLabel><b>Firstname * :</b> </ControlLabel> 
+                            <FormControl
+                                type="text"
+                                value={this.state.firstname}
+                                placeholder="Enter firstname"
+                                onChange={this.handleOnChange}
+                                name="firstname"
+                                required/>
+                        </FormGroup>
+                        <FormGroup>
+                            <ControlLabel><b>Lastname * :</b> </ControlLabel> 
+                            <FormControl
+                                type="text"
+                                value={this.state.lastname}
+                                placeholder="Enter lastname"
+                                onChange={this.handleOnChange}
+                                name="lastname"
+                                required/>
+                        </FormGroup>
+                        <FormGroup>
+                            <ControlLabel><b>Email * :</b> </ControlLabel> 
+                            <FormControl
+                                type="email"
+                                value={this.state.email}
+                                placeholder="Enter email"
+                                onChange={this.handleOnChange}
+                                name="email"
+                                required/>
+                        </FormGroup>
+                        <FormGroup>
+                            <ControlLabel><b>Gender :</b> </ControlLabel>{' '}
+                            <Radio name="gender" value="male" onClick={this.handleOnChange} inline>
+                                Male
+                            </Radio>{' '}
+                            <Radio name="gender" value="female" onClick={this.handleOnChange} inline>
+                                Female
+                            </Radio>
+                        </FormGroup>
+                        <FormGroup>
+                            <ControlLabel><b>Team :</b> </ControlLabel> 
+                            <FormControl
+                                componentClass='select'
+                                value={this.state.team}
+                                onChange={this.handleOnChange}
+                                name="team">
+                                <option value="">Select your team</option>
+                                <option value="IMS">IMS Team</option>
+                                <option value="CMMS">CMMS Team</option>
+                                <option value="Android">Android Team</option>
+                                <option value="IOS">IOS Team</option>
+                                <option value="QA">QA Team</option>
+                            </FormControl>
+                        </FormGroup>
+                        <FormGroup>
+                            <ControlLabel><b>Favourite Sports :</b> </ControlLabel>{' '}
+                            <Checkbox name="sport" value="cricket" onClick={this.handleOnChangeCheckbox} inline>
+                                Cricket
+                            </Checkbox>{' '}
+                            <Checkbox name="sport" value="football" onClick={this.handleOnChangeCheckbox} inline>
+                                Football
+                            </Checkbox>{' '}
+                            <Checkbox name="sport" value="chess" onClick={this.handleOnChangeCheckbox} inline>
+                                Chess
+                            </Checkbox>{' '}
+                            <Checkbox name="sport" value="carrom" onClick={this.handleOnChangeCheckbox} inline>
+                                Carrom
+                            </Checkbox>
+                        </FormGroup>
+                        <ButtonGroup>
+                            <Button bsStyle="danger" type="submit">Save</Button>
+                            <Button bsStyle="default" onClick={this.resetStateAndForm}>Clear</Button>
+                        </ButtonGroup>
+                        
+                        {/* <Link to="/">Go Back</Link> */}
+                        
+                        {(this.props.match)
+                        ?
+                        <div>
+                            <br/>
+                            <hr/>
+                            <Button bsStyle="link" onClick={this.navigateToList}>
+                                &lt;= Go Back
+                            </Button>
+                        </div>
+                        :""}
+                        
+                    </form>
+                </Col>
+            </Grid>
         )
     }
 }

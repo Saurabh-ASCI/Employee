@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import './App.css';
+import {Table, Button, Modal} from 'react-bootstrap';
+import EmployeeForm from './EmployeeForm';
 
 class EmployeeList extends Component{
+
     constructor (props) {
         super(props);
-        this.onDelete = this.onDelete.bind(this);
+        this.state = {
+            showModal : false,
+        }
+        this.handleModalClose = this.handleModalClose.bind(this);
+        this.handleModalShow = this.handleModalShow.bind(this);
     }
 
-    onDelete(event) {
-        console.log('on delete', event);
-        
-        // this.props.RemoveEmployee(index)
-    }
-   
     componentDidMount(){
         console.log("EmployeeList component mounted");
     }
@@ -35,7 +36,7 @@ class EmployeeList extends Component{
         console.table(nextProps.employees);
         console.groupEnd("New Props");
         let isUpdate;
-        let isSame = isEqual(this.props.employees, nextProps.employees);
+        let isSame = isEqual(this.props.employees, nextProps.employees) && isEqual(this.state, nextState);
        
         isUpdate = !isSame;
         //If you are comparing specific property of props (not whole props object) then it can be done with this
@@ -53,9 +54,27 @@ class EmployeeList extends Component{
         console.log("EmployeeList Component is updated");
     }
 
-    navigateToForm(id){
-        this.props.clickOnUpdate(id);
-        this.props.history.push('/EmployeeForm/' + id);
+    navigateToForm(id, index){
+        this.handleModalShow();
+        // this.props.clickOnUpdate(id);
+        this.currentEmployee = this.props.employees[index];
+        // this.props.history.push('/EmployeeForm/' + id);
+    }
+
+    handleModalClose(){
+        console.count("Closing modal " + this.state.showModal);
+        this.setState({
+            showModal : false
+        })
+        console.count("Closing modal " + this.state.showModal);
+    }
+
+    handleModalShow(){
+        console.log("Showing modal " + this.state.showModal);
+        this.setState({
+            showModal : true
+        })
+        console.log("Showing modal " + this.state.showModal);        
     }
 
     render(){
@@ -70,40 +89,51 @@ class EmployeeList extends Component{
                 <td>{employee.team}</td>
                 <td>{employee.sport.join(', ')}</td>
                 <td>
-                    <button onClick={() => this.navigateToForm(employee.id)}>
-                        UPDATE
-                    </button>
+                    <Button bsStyle="primary" onClick={() => this.navigateToForm(employee.id, index)}>
+                    UPDATE</Button>
                 </td>
                 <td>
-                    <button onClick={() => this.props.RemoveEmployee(employee.id)}>
-                        DELETE
-                    </button>
+                    <Button bsStyle="danger" onClick={() => this.props.RemoveEmployee(employee.id)}>DELETE</Button>
                 </td>
             </tr>)
             return element;
         })
 
         return(
-            (this.props.employees.length === 0)
-            ?<p>No Employess data present yet</p>
-            :<table border="2" width="100%" style={{borderCollapse: 'collapse'}}>
-                <thead style={{backgroundColor : '#ddd'}}>
-                    <tr>
-                        <th>ID</th>
-                        <th>Firstname</th>
-                        <th>Lastname</th>
-                        <th>EmailID</th>
-                        <th>Gender</th>
-                        <th>Team</th>
-                        <th>Favourite Sport</th>
-                        <th>Update</th>
-                        <th>Delete</th>
-                    </tr>    
-                </thead>
-                <tbody>
-                    {employeeList}
-                </tbody>    
-            </table>
+            <div>
+                {(this.props.employees.length === 0)
+                    ?<p>No Employess data present yet</p>
+                    :<Table bordered hover>
+                        <thead style={{backgroundColor : '#ddd'}}>
+                            <tr>
+                                <th>ID</th>
+                                <th>Firstname</th>
+                                <th>Lastname</th>
+                                <th>EmailID</th>
+                                <th>Gender</th>
+                                <th>Team</th>
+                                <th>Favourite Sport</th>
+                                <th>Update</th>
+                                <th>Delete</th>
+                            </tr>    
+                        </thead>
+                        <tbody>
+                            {employeeList}
+                        </tbody>    
+                    </Table>
+                }
+                <Modal show={this.state.showModal} onHide={this.handleModalClose} animation={false}>
+                    {/* <Modal.Header closeButton>
+                        <Modal.Title>Update Form</Modal.Title>
+                    </Modal.Header> */}
+                    <Modal.Body>
+                        <EmployeeForm onUpdateEmployee={this.props.onUpdateEmployee} employee={this.currentEmployee} closeModal={this.handleModalClose}/>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={this.handleModalClose}>Close</Button>
+                    </Modal.Footer>  
+                </Modal>
+            </div>
         )
     }
 }

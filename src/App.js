@@ -3,9 +3,17 @@ import React, { Component } from 'react';
 import './App.css';
 import EmployeeForm from './EmployeeForm';
 import EmployeeList from './EmployeeList';
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, Switch } from 'react-router-dom';
 
-// import {Button} from 'react-bootstrap';
+class ComponentNoMatch extends Component{
+  render(){
+    return (
+      <div>
+        <h1>404 Page not found</h1>
+      </div>  
+    )
+  }
+}
 
 class App extends Component {
   constructor(props){
@@ -106,17 +114,18 @@ class App extends Component {
     return (
       <div className="App">
         <hr/>
-        <Link to="/EmployeeForm">Employee Form</Link>
+        <Link to="/EmployeeForm" className="btn btn-success">+ Add New Employee Form</Link>
         {/* <Link to="/">Employee List</Link> */}
         <hr/>
-        
-        <Route path={"/EmployeeForm"} exact
-        render={(props) => <EmployeeForm AddEmployeeDetails={this.AddEmployeeDetails} {...props}/>} />
-        <Route path={"/"} exact 
-        render={(props) => <EmployeeList employees={this.state.employees} {...props} RemoveEmployee={this.RemoveEmployee} clickOnUpdate={this.prepareForUpdate}/>} />
-        <Route path={'/EmployeeForm/:id'} exact
-        render={(props) => <EmployeeForm onUpdateEmployee={this.UpdateEmployee} employee={this.updateEmployeeData} {...props}/>}/>
-        {/* <Button bsStyle="success">TEST</Button> */}
+        <Switch>
+          <Route path={"/EmployeeForm"} exact
+          render={(props) => <EmployeeForm AddEmployeeDetails={this.AddEmployeeDetails} {...props}/>} />
+          <Route path={"/"} exact 
+          render={(props) => <EmployeeList employees={this.state.employees} {...props} RemoveEmployee={this.RemoveEmployee} clickOnUpdate={this.prepareForUpdate} onUpdateEmployee={this.UpdateEmployee}/>} />
+          {/* <Route path={'/EmployeeForm/:id'} exact
+          render={(props) => <EmployeeForm onUpdateEmployee={this.UpdateEmployee} employee={this.updateEmployeeData} {...props}/>}/> */}
+          <Route component={ComponentNoMatch}/>
+        </Switch>
       </div>
     );
   }
