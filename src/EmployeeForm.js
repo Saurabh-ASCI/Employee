@@ -146,7 +146,8 @@ class EmployeeForm extends Component{
     render(){
         return (
             <Grid>
-                <Col lg={this.id?12:6} style={this.id?{}:{margin : '0 auto', textAlign:'left'}}>
+                {/* <Col lg={this.id?12:6} style={this.id?{}:{margin : '0 auto', textAlign:'left'}}> */}
+                <Col lg={12}>
                 <form name="EmployeeForm" onSubmit={this.handleFormSubmit}>
                         <FormGroup>
                             <ControlLabel><b>Firstname * :</b> </ControlLabel> 
@@ -179,8 +180,8 @@ class EmployeeForm extends Component{
                                 required/>
                         </FormGroup>
                         <FormGroup>
-                            <ControlLabel><b>Gender :</b> </ControlLabel>{' '}
-                            <Radio name="gender" value="male" onClick={this.handleOnChange} inline>
+                            <ControlLabel><b>Gender * :</b> </ControlLabel>{' '}
+                            <Radio name="gender" value="male" onClick={this.handleOnChange} required inline>
                                 Male
                             </Radio>{' '}
                             <Radio name="gender" value="female" onClick={this.handleOnChange} inline>

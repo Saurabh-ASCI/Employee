@@ -9,6 +9,7 @@ class EmployeeList extends Component{
         super(props);
         this.state = {
             showModal : false,
+            inAddOrUpdate : 'Add'
         }
         this.handleModalClose = this.handleModalClose.bind(this);
         this.handleModalShow = this.handleModalShow.bind(this);
@@ -54,8 +55,8 @@ class EmployeeList extends Component{
         console.log("EmployeeList Component is updated");
     }
 
-    navigateToForm(id, index){
-        this.handleModalShow();
+    navigateToForm(id, index, UpdateStatus){
+        this.handleModalShow(UpdateStatus);
         // this.props.clickOnUpdate(id);
         this.currentEmployee = this.props.employees[index];
         // this.props.history.push('/EmployeeForm/' + id);
@@ -69,10 +70,11 @@ class EmployeeList extends Component{
         console.count("Closing modal " + this.state.showModal);
     }
 
-    handleModalShow(){
+    handleModalShow(UpdateStatus){
         console.log("Showing modal " + this.state.showModal);
         this.setState({
-            showModal : true
+            showModal : true,
+            inAddOrUpdate : UpdateStatus
         })
         console.log("Showing modal " + this.state.showModal);        
     }
@@ -89,7 +91,7 @@ class EmployeeList extends Component{
                 <td>{employee.team}</td>
                 <td>{employee.sport.join(', ')}</td>
                 <td>
-                    <Button bsStyle="primary" onClick={() => this.navigateToForm(employee.id, index)}>
+                    <Button bsStyle="primary" onClick={() => this.navigateToForm(employee.id, index, 'Update')}>
                     UPDATE</Button>
                 </td>
                 <td>
@@ -101,6 +103,13 @@ class EmployeeList extends Component{
 
         return(
             <div>
+                <Button bsStyle='success' onClick={() => {
+                    this.setState({
+                        showModal : true,
+                        inAddOrUpdate : 'Add'
+                    })
+                }}> + Add Employee Form </Button>
+                <br/><br/>
                 {(this.props.employees.length === 0)
                     ?<p>No Employess data present yet</p>
                     :<Table bordered hover>
@@ -127,7 +136,14 @@ class EmployeeList extends Component{
                         <Modal.Title>Update Form</Modal.Title>
                     </Modal.Header> */}
                     <Modal.Body>
-                        <EmployeeForm onUpdateEmployee={this.props.onUpdateEmployee} employee={this.currentEmployee} closeModal={this.handleModalClose}/>
+                        {this.state.inAddOrUpdate=="Add"
+                        ?
+                            <EmployeeForm AddEmployeeDetails={this.props.AddEmployeeDetails} 
+                            closeModal={this.handleModalClose}/>
+                        :
+                            <EmployeeForm onUpdateEmployee={this.props.onUpdateEmployee} employee={this.currentEmployee} closeModal={this.handleModalClose}/>
+                        }
+
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.handleModalClose}>Close</Button>

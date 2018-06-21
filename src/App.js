@@ -114,14 +114,14 @@ class App extends Component {
     return (
       <div className="App">
         <hr/>
-        <Link to="/EmployeeForm" className="btn btn-success">+ Add New Employee Form</Link>
+        {/* <Link to="/EmployeeForm" className="btn btn-success">+ Add New Employee Form</Link> */}
         {/* <Link to="/">Employee List</Link> */}
         <hr/>
         <Switch>
-          <Route path={"/EmployeeForm"} exact
-          render={(props) => <EmployeeForm AddEmployeeDetails={this.AddEmployeeDetails} {...props}/>} />
+          {/* <Route path={"/EmployeeForm"} exact
+          render={(props) => <EmployeeForm AddEmployeeDetails={this.AddEmployeeDetails} {...props}/>} /> */}
           <Route path={"/"} exact 
-          render={(props) => <EmployeeList employees={this.state.employees} {...props} RemoveEmployee={this.RemoveEmployee} clickOnUpdate={this.prepareForUpdate} onUpdateEmployee={this.UpdateEmployee}/>} />
+          render={(props) => <EmployeeList employees={this.state.employees} {...props} RemoveEmployee={this.RemoveEmployee} clickOnUpdate={this.prepareForUpdate} onUpdateEmployee={this.UpdateEmployee} AddEmployeeDetails={this.AddEmployeeDetails}/>} />
           {/* <Route path={'/EmployeeForm/:id'} exact
           render={(props) => <EmployeeForm onUpdateEmployee={this.UpdateEmployee} employee={this.updateEmployeeData} {...props}/>}/> */}
           <Route component={ComponentNoMatch}/>
