@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
 import {Table, Button} from 'react-bootstrap';
+import ViewEmployee from './ViewEmployee';
 
 class EmployeeList extends Component{
 
     constructor (props) {
         super(props);
         this.state = {
-            showModal : false,
-            inAddOrUpdate : 'Add'
+            showEmployee : '',
         }
     }
 
@@ -54,8 +54,16 @@ class EmployeeList extends Component{
 
     handleOnClickOfUpdateButton(id, index, UpdateStatus){
         this.props.clickOnUpdateButton(id);
+    }
+
+    handleOnClickOfViewButton(id, index, UpdateStatus){
+        // this.props.clickOnUpdateButton(id);
         // this.currentEmployee = this.props.employees[index];
         // this.props.history.push('/EmployeeForm/' + id);
+        console.log(id, index);
+        /* this.setState({
+            showEmployee : !this.state.showEmployee
+        }) */
     }
 
     render(){
@@ -65,10 +73,11 @@ class EmployeeList extends Component{
                 <td>{employee.id}</td>
                 <td>{employee.firstname}</td>
                 <td>{employee.lastname}</td>
-                <td>{employee.email}</td>
-                <td>{employee.gender}</td>
-                <td>{employee.team}</td>
-                <td>{employee.sport.join(', ')}</td>
+                <td>
+                    <Button bsStyle="warning" onClick={() => this.handleOnClickOfViewButton(employee.id, index, 'Update')}>
+                    VIEW
+                    </Button>
+                </td>
                 <td>
                     <Button bsStyle="primary" onClick={() => this.handleOnClickOfUpdateButton(employee.id, index, 'Update')}>
                     UPDATE</Button>
@@ -82,28 +91,30 @@ class EmployeeList extends Component{
 
         return(
             <div>
-                {(this.props.employees.length === 0)
-                    ?<p>No Employess data present yet</p>
-                    :<Table bordered hover>
-                        <thead style={{backgroundColor : '#ddd'}}>
-                            <tr>
-                                <th>ID</th>
-                                <th>Firstname</th>
-                                <th>Lastname</th>
-                                <th>EmailID</th>
-                                <th>Gender</th>
-                                <th>Team</th>
-                                <th>Favourite Sport</th>
-                                <th>Update</th>
-                                <th>Delete</th>
-                            </tr>    
-                        </thead>
-                        <tbody>
-                            {employeeList}
-                        </tbody>    
-                    </Table>
-                }
-                
+                <div className="col-sm-5" style={{float : 'left'}}>
+                    {(this.props.employees.length === 0)
+                        ?<p>No Employess data present yet</p>
+                        :<Table bordered hover>
+                            <thead style={{backgroundColor : '#ddd'}}>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Firstname</th>
+                                    <th>Lastname</th>
+                                    <th>Show</th>
+                                    <th>Update</th>
+                                    <th>Delete</th>
+                                </tr>    
+                            </thead>
+                            <tbody>
+                                {employeeList}
+                            </tbody>    
+                        </Table>
+                    }
+                    
+                </div>
+                <div className="col-sm-5" style={{float : 'left'}}>
+                    <ViewEmployee/>
+                </div>
             </div>
         )
     }

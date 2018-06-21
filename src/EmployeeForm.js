@@ -18,7 +18,7 @@ class EmployeeForm extends Component{
         this.handleOnChangeCheckbox = this.handleOnChangeCheckbox.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.resetStateAndForm = this.resetStateAndForm.bind(this);
-        this.navigateToList = this.navigateToList.bind(this);
+
         if(this.props.match && this.props.match.params.hasOwnProperty('id')){
             this.id = this.props.match.params.id;
             console.log("In update of employee " + this.id);
@@ -33,7 +33,6 @@ class EmployeeForm extends Component{
 
     componentDidMount(){
         console.log("EmployeeForm component mounted");
-        // console.log(this.id);
         
         // After component renders successfully, store all checkboxes
         this.checkboxes = document.querySelectorAll('[type="checkbox"]');
@@ -131,16 +130,7 @@ class EmployeeForm extends Component{
         }
         
         this.resetStateAndForm();
-        this.navigateToList();
-    }
-
-    navigateToList(){
-        this.resetStateAndForm();
-        if(this.props.history){
-            this.props.history.push("/");
-        }else if(this.props.closeModal){
-            this.props.closeModal();
-        }
+        this.props.closeModal();
     }
 
     render(){

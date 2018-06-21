@@ -128,21 +128,20 @@ class App extends Component {
 		employees={this.state.employees} 
 		RemoveEmployee={this.RemoveEmployee}
 		clickOnUpdateButton={this.clickOnUpdateButton}
-		UpdateEmployee={this.UpdateEmployee}
 		/>
 
-		<ModalComponent showModal={this.state.showModal} handleModalClose={this.handleModalClose}>
-			{
+		<ModalComponent showModal={this.state.showModal} handleModalClose={this.handleModalClose}
+			children={
 				this.state.inAddOrUpdate=="Add"
 				?
 					<div><EmployeeForm 
 					AddEmployeeDetails={this.AddEmployeeDetails} 
-					closeModal={this.handleModalClose}/> asgdhjk</div>
+					closeModal={this.handleModalClose}/> in add</div>
 				:
-					<EmployeeForm onUpdateEmployee={this.onUpdateEmployee} 
+					<EmployeeForm onUpdateEmployee={this.UpdateEmployee} 
 					employee={this.currentEmployee} 
 					closeModal={this.handleModalClose}/>
-			}
+			}>
 		</ModalComponent>
 
       </div>
