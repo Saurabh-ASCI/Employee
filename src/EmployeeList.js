@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import {Table, Button, Modal} from 'react-bootstrap';
-import EmployeeForm from './EmployeeForm';
+import {Table, Button} from 'react-bootstrap';
 
 class EmployeeList extends Component{
 
@@ -11,11 +10,9 @@ class EmployeeList extends Component{
             showModal : false,
             inAddOrUpdate : 'Add'
         }
-        this.handleModalClose = this.handleModalClose.bind(this);
-        this.handleModalShow = this.handleModalShow.bind(this);
     }
 
-    componentDidMount(){
+    /* componentDidMount(){
         console.log("EmployeeList component mounted");
     }
 
@@ -26,7 +23,7 @@ class EmployeeList extends Component{
 
     componentWillReceiveProps(nextProps){
         console.log("EmployeeList Component receives new props");
-    }
+    } */
 
     shouldComponentUpdate(nextProps, nextState){
         // console.log("EmployeeList Component receives new props");
@@ -47,36 +44,18 @@ class EmployeeList extends Component{
         return isUpdate;
     }
 
-    componentWillUpdate(){
+    /* componentWillUpdate(){
         console.log("EmployeeList Component is going to update");
     }
 
     componentDidUpdate(){
         console.log("EmployeeList Component is updated");
-    }
+    } */
 
-    navigateToForm(id, index, UpdateStatus){
-        this.handleModalShow(UpdateStatus);
-        // this.props.clickOnUpdate(id);
-        this.currentEmployee = this.props.employees[index];
+    handleOnClickOfUpdateButton(id, index, UpdateStatus){
+        this.props.clickOnUpdateButton(id);
+        // this.currentEmployee = this.props.employees[index];
         // this.props.history.push('/EmployeeForm/' + id);
-    }
-
-    handleModalClose(){
-        console.count("Closing modal " + this.state.showModal);
-        this.setState({
-            showModal : false
-        })
-        console.count("Closing modal " + this.state.showModal);
-    }
-
-    handleModalShow(UpdateStatus){
-        console.log("Showing modal " + this.state.showModal);
-        this.setState({
-            showModal : true,
-            inAddOrUpdate : UpdateStatus
-        })
-        console.log("Showing modal " + this.state.showModal);        
     }
 
     render(){
@@ -91,7 +70,7 @@ class EmployeeList extends Component{
                 <td>{employee.team}</td>
                 <td>{employee.sport.join(', ')}</td>
                 <td>
-                    <Button bsStyle="primary" onClick={() => this.navigateToForm(employee.id, index, 'Update')}>
+                    <Button bsStyle="primary" onClick={() => this.handleOnClickOfUpdateButton(employee.id, index, 'Update')}>
                     UPDATE</Button>
                 </td>
                 <td>
@@ -103,13 +82,6 @@ class EmployeeList extends Component{
 
         return(
             <div>
-                <Button bsStyle='success' onClick={() => {
-                    this.setState({
-                        showModal : true,
-                        inAddOrUpdate : 'Add'
-                    })
-                }}> + Add Employee Form </Button>
-                <br/><br/>
                 {(this.props.employees.length === 0)
                     ?<p>No Employess data present yet</p>
                     :<Table bordered hover>
@@ -131,24 +103,7 @@ class EmployeeList extends Component{
                         </tbody>    
                     </Table>
                 }
-                <Modal show={this.state.showModal} onHide={this.handleModalClose} animation={false}>
-                    {/* <Modal.Header closeButton>
-                        <Modal.Title>Update Form</Modal.Title>
-                    </Modal.Header> */}
-                    <Modal.Body>
-                        {this.state.inAddOrUpdate=="Add"
-                        ?
-                            <EmployeeForm AddEmployeeDetails={this.props.AddEmployeeDetails} 
-                            closeModal={this.handleModalClose}/>
-                        :
-                            <EmployeeForm onUpdateEmployee={this.props.onUpdateEmployee} employee={this.currentEmployee} closeModal={this.handleModalClose}/>
-                        }
-
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={this.handleModalClose}>Close</Button>
-                    </Modal.Footer>  
-                </Modal>
+                
             </div>
         )
     }

@@ -73,7 +73,7 @@ class EmployeeForm extends Component{
         }
     }
 
-    componentWillMount(){
+    /* componentWillMount(){
         console.log("EmployeeForm component is going to mount on DOM");
     }
 
@@ -84,7 +84,7 @@ class EmployeeForm extends Component{
 
     componentWillUnmount(){
         console.log("###### EmployeeForm commponet is going to unmount");
-    }
+    } */
 
     handleOnChange(e){
         console.log(e.target.name)
