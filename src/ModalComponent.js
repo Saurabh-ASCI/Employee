@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import {Button, Modal} from 'react-bootstrap';
-import EmployeeForm from './EmployeeForm';
 
 class ModalComponent extends Component{
     render(){

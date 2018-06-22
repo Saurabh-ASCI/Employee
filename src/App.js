@@ -10,19 +10,19 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-	  employees : [],
-	  showModal : false,
-	  inAddOrUpdate : 'Update'
+      employees : [],
+      showModal : false,
+      inAddOrUpdate : 'Update'
     }
     this.AddEmployeeDetails = this.AddEmployeeDetails.bind(this);
     this.UpdateEmployee = this.UpdateEmployeeDetails.bind(this);
     this.RemoveEmployee = this.onRemoveEmployee.bind(this);
-	this.prepareForUpdate = this.sendEmployeeDataToUpdate.bind(this);
-	//modal handler
-	this.handleModalClose = this.handleModalClose.bind(this);
-	this.handleModalShow = this.handleModalShow.bind(this);
+    this.prepareForUpdate = this.sendEmployeeDataToUpdate.bind(this);
+    //modal handler
+    this.handleModalClose = this.handleModalClose.bind(this);
+    this.handleModalShow = this.handleModalShow.bind(this);
 
-	this.clickOnUpdateButton = this.clickOnUpdateButton.bind(this);
+    this.clickOnUpdateButton = this.clickOnUpdateButton.bind(this);
   }
 
   componentWillMount(){
@@ -136,11 +136,11 @@ class App extends Component {
 				?
 					<div><EmployeeForm 
 					AddEmployeeDetails={this.AddEmployeeDetails} 
-					closeModal={this.handleModalClose}/> in add</div>
+					closeModal={this.handleModalClose}/></div>
 				:
-					<EmployeeForm onUpdateEmployee={this.UpdateEmployee} 
+					<div><EmployeeForm onUpdateEmployee={this.UpdateEmployee} 
 					employee={this.currentEmployee} 
-					closeModal={this.handleModalClose}/>
+					closeModal={this.handleModalClose}/></div>
 			}>
 		</ModalComponent>
 

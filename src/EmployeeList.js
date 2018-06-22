@@ -8,14 +8,15 @@ class EmployeeList extends Component{
     constructor (props) {
         super(props);
         this.state = {
-            showEmployee : '',
+            currentEmployee : {}
         }
+        this.handleHideViewComponent = this.handleHideViewComponent.bind(this);
     }
 
-    /* componentDidMount(){
+    /* 
+    componentDidMount(){
         console.log("EmployeeList component mounted");
     }
-
     componentWillMount(){
         console.log("EmployeeList component is going to mount on DOM");
         // this.navigateToAddForm = this.navigateToForm.bind(this);
@@ -47,23 +48,40 @@ class EmployeeList extends Component{
     /* componentWillUpdate(){
         console.log("EmployeeList Component is going to update");
     }
-
+    */
+    
     componentDidUpdate(){
         console.log("EmployeeList Component is updated");
-    } */
-
+        if(this.state.currentEmployee && Object.keys(this.state.currentEmployee).length !== 0){
+            //updating current employee
+            console.log(this.state.currentEmployee);
+            const index = this.props.employees.findIndex(emp => emp.id === this.state.currentEmployee.id);
+            this.setState({ 
+                currentEmployee : this.props.employees[index]
+            })
+        }
+    } 
+        
     handleOnClickOfUpdateButton(id, index, UpdateStatus){
         this.props.clickOnUpdateButton(id);
     }
 
     handleOnClickOfViewButton(id, index, UpdateStatus){
         // this.props.clickOnUpdateButton(id);
-        // this.currentEmployee = this.props.employees[index];
+        this.setState({
+            currentEmployee : this.props.employees[index]
+        })
         // this.props.history.push('/EmployeeForm/' + id);
-        console.log(id, index);
+        console.log(this.state.currentEmployee);
         /* this.setState({
             showEmployee : !this.state.showEmployee
         }) */
+    }
+
+    handleHideViewComponent(){
+        this.setState({
+            currentEmployee : {}
+        })
     }
 
     render(){
@@ -91,7 +109,7 @@ class EmployeeList extends Component{
 
         return(
             <div>
-                <div className="col-sm-5" style={{float : 'left'}}>
+                <div className="col-sm-6" style={{float : 'left'}}>
                     {(this.props.employees.length === 0)
                         ?<p>No Employess data present yet</p>
                         :<Table bordered hover>
@@ -113,7 +131,8 @@ class EmployeeList extends Component{
                     
                 </div>
                 <div className="col-sm-5" style={{float : 'left'}}>
-                    <ViewEmployee/>
+                    <ViewEmployee employee={this.state.currentEmployee}
+                    handleHideViewComponent={this.handleHideViewComponent}/>
                 </div>
             </div>
         )
