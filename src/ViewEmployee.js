@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import {Button, ProgressBar} from 'react-bootstrap';
 
 class ViewEmployee extends Component{
     render(){
@@ -14,12 +13,6 @@ class ViewEmployee extends Component{
                     <span><b>Gender : </b> {this.props.employee.gender}</span>
                     <span><b>Team : </b> {this.props.employee.team}</span>
                     <span><b>Favourite Sports : </b> {this.props.employee.sport.join(', ')}</span>
-                    <hr/>
-                    <Button 
-                        bsStyle={"warning"} 
-                        onClick={this.props.handleHideViewComponent}>
-                        Close
-                    </Button>
                 </div>
                 :""
                 }

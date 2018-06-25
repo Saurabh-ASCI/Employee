@@ -4,6 +4,8 @@ import './App.css';
 import EmployeeForm from './EmployeeForm';
 import EmployeeList from './EmployeeList';
 import ModalComponent from './ModalComponent';
+import ViewEmployee from './ViewEmployee';
+
 import * as ReactBootstrap from 'react-bootstrap';
 
 class App extends Component {
@@ -12,7 +14,8 @@ class App extends Component {
     this.state = {
       employees : [],
       showModal : false,
-      inAddOrUpdate : 'Update'
+      inAddOrUpdate : 'Update',
+      currentEmployee : {}
     }
     this.AddEmployeeDetails = this.AddEmployeeDetails.bind(this);
     this.UpdateEmployee = this.UpdateEmployeeDetails.bind(this);
@@ -23,6 +26,7 @@ class App extends Component {
     this.handleModalShow = this.handleModalShow.bind(this);
 
     this.clickOnUpdateButton = this.clickOnUpdateButton.bind(this);
+    this.handleOnClickOfViewButton = this.handleOnClickOfViewButton.bind(this);
   }
 
   componentWillMount(){
@@ -43,7 +47,7 @@ class App extends Component {
     const temp_employees = this.state.employees.slice();
     if(temp_employees.length !== 0){
       if(temp_employees[temp_employees.length - 1].hasOwnProperty('id')){
-        const new_id = parseInt(temp_employees[temp_employees.length - 1].id) + 1;
+        const new_id = parseInt(temp_employees[temp_employees.length - 1].id, 10) + 1;
         console.log(new_id, typeof new_id);
         data.id = new_id.toString();
       }else{
@@ -70,9 +74,18 @@ class App extends Component {
       this.setState({
         employees : temp_employees
       })
+      console.log("Employees are updated");
       localStorage.setItem('employees', JSON.stringify(temp_employees));
+      if(this.state.currentEmployee && this.state.currentEmployee.id === this.state.employees[updateIndex].id){
+        console.log("Updating view also");
+        console.log("#######################################################");
+        // console.table(this.state.currentEmployee);
+        // console.table(this.state.employees[updateIndex]);
+        this.setState({
+          currentEmployee : temp_employees[updateIndex]
+        })
+      }
     }
-  
   }
 
   onRemoveEmployee(id){
@@ -86,8 +99,12 @@ class App extends Component {
       this.setState({
         employees : temp_employees
       });
-
       localStorage.setItem('employees', JSON.stringify(temp_employees));
+      if(this.state.currentEmployee && this.state.currentEmployee.id === this.state.employees[index].id){
+        this.setState({
+          currentEmployee : {}
+        })
+      }
     }
   }
 
@@ -112,37 +129,57 @@ class App extends Component {
 
 	clickOnUpdateButton(id){
 		console.log(id);
-      	const index = this.state.employees.findIndex(emp => emp.id === id);
+    const index = this.state.employees.findIndex(emp => emp.id === id);
 		this.currentEmployee = this.state.employees[index];
 		this.handleModalShow('Update');
-	}
+  }
+  
+  handleOnClickOfViewButton(index){
+    console.log("Test " + index);
+    this.setState({
+        currentEmployee : this.state.employees[index]
+    })
+  }
+
+  componentDidUpdate(){
+    console.log("_____________________________________");
+    console.table(this.state.employees);
+    console.table(this.state.currentEmployee);
+    console.log("_____________________________________");
+  }
 
   render() {
     return (
       <div className="App">
 	  	<br/>
-		<ReactBootstrap.Button bsStyle="success" onClick={() => this.handleModalShow('Add')}> + Add New Employee</ReactBootstrap.Button>
-		<hr/>
+      <ReactBootstrap.Button bsStyle="success" onClick={() => this.handleModalShow('Add')}> + Add New Employee</ReactBootstrap.Button>
+      <hr/>
+      <div className="col-sm-7" style={{float : 'left'}}>
+        <EmployeeList 
+        employees={this.state.employees} 
+        RemoveEmployee={this.RemoveEmployee}
+        clickOnUpdateButton={this.clickOnUpdateButton}
+        handleOnClickOfViewButton={this.handleOnClickOfViewButton}
+        currentViewEmployee={this.state.currentEmployee}
+        />
+      </div>
+      <div className="col-sm-5" style={{float : 'left'}}>
+        <ViewEmployee employee={this.state.currentEmployee}/>
+      </div>
 
-		<EmployeeList 
-		employees={this.state.employees} 
-		RemoveEmployee={this.RemoveEmployee}
-		clickOnUpdateButton={this.clickOnUpdateButton}
-		/>
-
-		<ModalComponent showModal={this.state.showModal} handleModalClose={this.handleModalClose}
-			children={
-				this.state.inAddOrUpdate=="Add"
-				?
-					<div><EmployeeForm 
-					AddEmployeeDetails={this.AddEmployeeDetails} 
-					closeModal={this.handleModalClose}/></div>
-				:
-					<div><EmployeeForm onUpdateEmployee={this.UpdateEmployee} 
-					employee={this.currentEmployee} 
-					closeModal={this.handleModalClose}/></div>
-			}>
-		</ModalComponent>
+      <ModalComponent showModal={this.state.showModal} handleModalClose={this.handleModalClose}
+        children={
+          this.state.inAddOrUpdate === "Add"
+          ?
+            <div><EmployeeForm 
+            AddEmployeeDetails={this.AddEmployeeDetails} 
+            closeModal={this.handleModalClose}/></div>
+          :
+            <div><EmployeeForm onUpdateEmployee={this.UpdateEmployee} 
+            employee={this.currentEmployee} 
+            closeModal={this.handleModalClose}/></div>
+        }>
+      </ModalComponent>
 
       </div>
     );

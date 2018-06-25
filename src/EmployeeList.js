@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import {Table, Button} from 'react-bootstrap';
-import ViewEmployee from './ViewEmployee';
 
 class EmployeeList extends Component{
 
@@ -10,7 +9,7 @@ class EmployeeList extends Component{
         this.state = {
             currentEmployee : {}
         }
-        this.handleHideViewComponent = this.handleHideViewComponent.bind(this);
+        
     }
 
     /* 
@@ -35,7 +34,7 @@ class EmployeeList extends Component{
         console.table(nextProps.employees);
         console.groupEnd("New Props");
         let isUpdate;
-        let isSame = isEqual(this.props.employees, nextProps.employees) && isEqual(this.state, nextState);
+        let isSame = isEqual(this.props, nextProps) && isEqual(this.state, nextState);
        
         isUpdate = !isSame;
         //If you are comparing specific property of props (not whole props object) then it can be done with this
@@ -66,33 +65,15 @@ class EmployeeList extends Component{
         this.props.clickOnUpdateButton(id);
     }
 
-    handleOnClickOfViewButton(id, index, UpdateStatus){
-        // this.props.clickOnUpdateButton(id);
-        this.setState({
-            currentEmployee : this.props.employees[index]
-        })
-        // this.props.history.push('/EmployeeForm/' + id);
-        console.log(this.state.currentEmployee);
-        /* this.setState({
-            showEmployee : !this.state.showEmployee
-        }) */
-    }
-
-    handleHideViewComponent(){
-        this.setState({
-            currentEmployee : {}
-        })
-    }
-
     render(){
 
         const employeeList = this.props.employees.map((employee, index) => {
-            const element = (<tr key={employee.firstname.toLowerCase() + employee.lastname.toLowerCase() + '-'+index}>
+            const element = (<tr key={employee.firstname.toLowerCase() + employee.lastname.toLowerCase() + '-'+index} className={this.props.currentViewEmployee.id === employee.id ? 'table-danger' : ''}>
                 <td>{employee.id}</td>
                 <td>{employee.firstname}</td>
                 <td>{employee.lastname}</td>
                 <td>
-                    <Button bsStyle="warning" onClick={() => this.handleOnClickOfViewButton(employee.id, index, 'Update')}>
+                    <Button bsStyle="warning" onClick={() => this.props.handleOnClickOfViewButton(index)}>
                     VIEW
                     </Button>
                 </td>
@@ -109,31 +90,24 @@ class EmployeeList extends Component{
 
         return(
             <div>
-                <div className="col-sm-6" style={{float : 'left'}}>
-                    {(this.props.employees.length === 0)
-                        ?<p>No Employess data present yet</p>
-                        :<Table bordered hover>
-                            <thead style={{backgroundColor : '#ddd'}}>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Firstname</th>
-                                    <th>Lastname</th>
-                                    <th>Show</th>
-                                    <th>Update</th>
-                                    <th>Delete</th>
-                                </tr>    
-                            </thead>
-                            <tbody>
-                                {employeeList}
-                            </tbody>    
-                        </Table>
-                    }
-                    
-                </div>
-                <div className="col-sm-5" style={{float : 'left'}}>
-                    <ViewEmployee employee={this.state.currentEmployee}
-                    handleHideViewComponent={this.handleHideViewComponent}/>
-                </div>
+                {(this.props.employees.length === 0)
+                    ?<p>No Employees data present yet</p>
+                    :<Table bordered hover>
+                        <thead style={{backgroundColor : '#ddd'}}>
+                            <tr>
+                                <th>ID</th>
+                                <th>Firstname</th>
+                                <th>Lastname</th>
+                                <th>Show</th>
+                                <th>Update</th>
+                                <th>Delete</th>
+                            </tr>    
+                        </thead>
+                        <tbody>
+                            {employeeList}
+                        </tbody>    
+                    </Table>
+                }      
             </div>
         )
     }
